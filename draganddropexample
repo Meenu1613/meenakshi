@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Drag and Drop Example</title>
+  <style>
+    .container {
+      width: 300px;
+      height: 300px;
+      border: 1px solid #ccc;
+      padding: 10px;
+      float: left;
+    }
+
+    .item {
+      width: 80px;
+      height: 80px;
+      background-color: #f1f1f1;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      cursor: move;
+    }
+
+    .item.dragging {
+      opacity: 0.5;
+    }
+
+    .success-message {
+      margin-top: 10px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>Drag and Drop Example</h1>
+
+  <div class="container" id="container1">
+    <div class="item" draggable="true">Item 1</div>
+    <div class="item" draggable="true">Item 2</div>
+    <div class="item" draggable="true">Item 3</div>
+  </div>
+
+  <div class="container" id="container2"></div>
+
+  <button onclick="resetContainers()">Reset</button>
+
+  <script>
+    // Global variables
+    let draggedItem = null;
+
+    // Event listener for starting the drag
+    function dragStart(event) {
+      draggedItem = event.target;
+      event.target.classList.add('dragging');
+    }
+
+    // Event listener for ending the drag
+    function dragEnd(event) {
+      event.target.classList.remove('dragging');
+    }
+
+    // Event listener for dropping the item
+    function drop(event) {
+      event.preventDefault();
+      const container = event.target;
+      container.appendChild(draggedItem);
+      draggedItem = null;
+      container.innerHTML += '<p class="success-message">Item dropped successfully!</p>';
+    }
+
+    // Event listener for allowing the drop
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    // Function to reset the containers
+    function resetContainers() {
+      const container1 = document.getElementById('container1');
+      const container2 = document.getElementById('container2');
+      container1.innerHTML = '<div class="item" draggable="true">Item 1</div><div class="item" draggable="true">Item 2</div><div class="item" draggable="true">Item 3</div>';
+      container2.innerHTML = '';
+    }
+
+    // Attach event listeners to the draggable items
+    const items = document.querySelectorAll('.item');
+    items.forEach(item => {
+      item.addEventListener('dragstart', dragStart);
+      item.addEventListener('dragend', dragEnd);
+    });
+
+    // Attach event listeners to the second container
+    const container2 = document.getElementById('container2');
+    container2.addEventListener('dragover', allowDrop);
+    container2.addEventListener('drop', drop);
+  </script>
+</body>
+</html>
